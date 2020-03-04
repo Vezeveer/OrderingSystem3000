@@ -32,68 +32,42 @@ namespace OrderingSystem3000
 
         static void Main(string[] args)
         {
-            bool loop = true, exitBrowseChoice = false;
+            bool loopMain = true;
             
             do
             {
                 renderScreen(homeTitle, homeMenuOptions); //home options menu
-                switch (checkChoice(homeTitle, homeMenuOptions, 3)) 
+                switch (getChoice(homeTitle, homeMenuOptions, 3)) 
                 {
                     case 1: //product options
                         do
                         {
-                            renderScreen(browseTitle, productOptions);
+                            renderScreen(browseTitle, productOptions); //get product ID
+                            int productID = getChoice(browseTitle, productOptions, 4) - 1;
 
-                            switch (checkChoice(browseTitle, productOptions, 4)) 
+                            switch(productID)
                             {
-                                case 1: //add or remove options for selected product
-                                    bool exitLoop = false;
-                                    do
-                                    {
-                                        renderScreen("Apples", addRemoveOptions);
-                                        switch(checkChoice("Apples", addRemoveOptions, 3))
-                                        {
-                                            case 1:
-                                                //add
-                                                addToCart(0, "Apples");
-                                                exitLoop = true;
-                                                break;
-                                            case 2:
-                                                //delete
-                                                removeFromCart(0, "Apples");
-                                                exitLoop = true;
-                                                break;
-                                            case 3:
-                                                //go back
-                                                exitLoop = true;
-                                                break;
-                                        }
-                                        if (exitLoop) break;
-                                    } while (true);
+                                case 0:
+                                    addRemovePrompt(productID, "Apples");
+                                    break;
+                                case 1:
+                                    addRemovePrompt(productID, "Mangoes");
                                     break;
                                 case 2:
-                                    
-                                    break;
-                                case 3:
-                                    
-                                    break;
-                                case 4: //Go Back
-                                    exitBrowseChoice = true; 
-                                    break;
-                                default:
+                                    addRemovePrompt(productID, "Bananas");
                                     break;
                             }
-                            if (exitBrowseChoice) break;
+                            if (productID == 3) break; //exit product options
                         } while (true);
                         
                         break;
                     case 2: //Checkout
                         break;
                     case 3: //Exit
-                        loop = false;
+                        loopMain = false;
                         break;
                 }
-            } while (loop);
+            } while (loopMain);
             
 
             //Items To Show with costs
@@ -103,6 +77,25 @@ namespace OrderingSystem3000
             //On checkout display all items and total cost
 
 
+        }
+
+        static void addRemovePrompt(int id, string name)
+        {
+            renderScreen(name, addRemoveOptions);
+            switch (getChoice(name, addRemoveOptions, 3))
+            {
+                case 1:
+                    //add
+                    addToCart(id, name);
+                    break;
+                case 2:
+                    //delete
+                    removeFromCart(id, name);
+                    break;
+                case 3:
+                    //go back
+                    break;
+            }
         }
 
         static void addToCart(int id, string name)
@@ -119,7 +112,7 @@ namespace OrderingSystem3000
             else
             {
                 renderScreen("Adding " + name, addMenu);
-                int addAmount = checkChoice("Adding" + name,
+                int addAmount = getChoice("Adding" + name,
                     addMenu,
                     stockAvailable[id]);
 
@@ -134,7 +127,7 @@ namespace OrderingSystem3000
 
 
         //gets input, returns a choice
-        static int checkChoice(string title, string[] menu, int maxChoices)
+        static int getChoice(string title, string[] menu, int maxChoices)
         {
             int choice;
             bool invalid = false;
@@ -188,7 +181,7 @@ namespace OrderingSystem3000
             else
             {
                 renderScreen(name + " Removing", deleteMenu);
-                int deleteAmount = checkChoice(name + " Removing", deleteMenu, cart[id]);
+                int deleteAmount = getChoice(name + " Removing", deleteMenu, cart[id]);
 
                 cart[id] -= deleteAmount;
                 stockAvailable[id] += deleteAmount;
