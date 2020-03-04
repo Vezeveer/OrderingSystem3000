@@ -33,25 +33,38 @@ namespace OrderingSystem3000
 
         static void Main(string[] args)
         {
-            bool loop = true;
+            bool loop = true, exitBrowseChoice = false;
             
-            renderScreen(homeTitle, homeMenu);
-
             do
             {
+                renderScreen(homeTitle, homeMenu); //home selection menu
                 homeChoice = checkChoice(homeTitle, homeMenu, 3);
-                switch (homeChoice)
+                
+                switch (homeChoice) 
                 {
-                    case 1:
-                        renderScreen(browseTitle, browseItems);
-                        browseChoice = checkChoice(browseTitle, browseItems, 4);
-                        switch(browseChoice)
+                    case 1: //product selection menu
+                        do
                         {
-                            case 1:
-                                renderScreen("Apples", itemMenu);
-                                itemChoice = checkChoice("Apples", itemMenu, 3);
-                                break;
-                        }
+                            renderScreen(browseTitle, browseItems);
+                            browseChoice = checkChoice(browseTitle, browseItems, 4);
+                            switch (browseChoice) 
+                            {
+                                case 1: 
+                                    addDeleteSelectMenu("Apples");
+                                    break;
+                                case 2:
+                                    addDeleteSelectMenu("Mangos");
+                                    break;
+                                case 3:
+                                    addDeleteSelectMenu("Bananas");
+                                    break;
+                                default:
+                                    exitBrowseChoice = true; //Go Back
+                                    break;
+                            }
+                            if (exitBrowseChoice) break;
+                        } while (true);
+                        
                         break;
                     case 2:
                         break;
@@ -71,7 +84,26 @@ namespace OrderingSystem3000
 
         }
 
+        static void addDeleteSelectMenu(string product)
+        {
+            renderScreen(product, itemMenu);
+            itemChoice = checkChoice(product, itemMenu, 3);
 
+            switch (itemChoice)
+            {
+                case 1:
+                    renderScreen("Adding " + product, null);
+                    int amount = checkChoice("Apples to add", new string[] { "Amount to add" }, stock[0]);
+                    Console.WriteLine("Success");
+                    Console.ReadLine();
+                    addToCart(0, amount);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //returns a choice
         static int checkChoice(string title, string[] menu, int maxChoices)
         {
             int choice;
