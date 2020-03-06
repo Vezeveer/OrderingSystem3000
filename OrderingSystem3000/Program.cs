@@ -11,7 +11,6 @@ namespace OrderingSystem3000
         static int[] cart = { 0, 0, 0 };
         static int[] stockAvailable = { 200, 150, 400 };
         static double[] price = { 52.00, 99.00, 34.00 };
-        static string[] labels = { "apple", "mango", "banana" };
         static double totalCost = 0.00;
         static bool loopMain = true;
 
@@ -62,7 +61,9 @@ namespace OrderingSystem3000
                         checkout();
                         break;
                     case 3: //Exit
-                        if (getChoice("EXIT", new string[] { "Are you sure you want to exit?", "", "1. Yes", "2. No" }, 2) == 1)
+                        if (getChoice("EXIT", new string[] {
+                            "Are you sure you want to exit?",
+                            "", "1. Yes", "2. No" }, 2) == 1)
                         {
                             loopMain = false;
                         }
@@ -202,7 +203,7 @@ namespace OrderingSystem3000
             else
             {
                 printScreen("Adding " + name, addMenu);
-                int addAmount = getChoice("Adding" + name,
+                int addAmount = getChoice("Adding " + name,
                     addMenu,
                     stockAvailable[id]);
 
