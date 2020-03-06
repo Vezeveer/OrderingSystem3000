@@ -13,6 +13,7 @@ namespace OrderingSystem3000
         static double[] price = { 52.00, 99.00, 34.00 };
         static string[] labels = { "apple", "mango", "banana" };
         static double totalCost = 0.00;
+        static bool loopMain = true;
 
         static string homeTitle = "Welcome, user!";
         static string[] homeMenuOptions = {
@@ -32,17 +33,13 @@ namespace OrderingSystem3000
 
         static void Main(string[] args)
         {
-            bool loopMain = true;
-            
             do
             {
-                renderScreen(homeTitle, homeMenuOptions); //home options menu
                 switch (getChoice(homeTitle, homeMenuOptions, 3)) 
                 {
                     case 1: //product options
                         do
                         {
-                            renderScreen(browseTitle, productOptions); //get product ID
                             int productID = getChoice(browseTitle, productOptions, 4) - 1;
 
                             switch(productID)
@@ -62,90 +59,9 @@ namespace OrderingSystem3000
                         
                         break;
                     case 2: //Checkout
-                        if(cart[0] + cart[1] + cart[2] == 0)
-                        {
-                            renderScreen("Oops!", new string[] { "Your cart is empty!" });
-                            Console.WriteLine("Press any key to go back...");
-                            Console.ReadLine();
-                        }
-                        else
-                        {
-                            bool invalid = false, exitCheckout = false;
-                            do
-                            {
-                                int coChoice = 0;
-                                calculateTotalCost();
-                                Console.Clear();
-                                Console.WriteLine("|| CHECKOUT");
-                                Console.WriteLine("|| -----------");
-                                if (cart[0] != 0)
-                                    Console.WriteLine("|| Apples in cart: " + cart[0]);
-                                if (cart[1] != 0)
-                                    Console.WriteLine("|| Mangoes in cart: " + cart[1]);
-                                if (cart[2] != 0)
-                                    Console.WriteLine("|| Bananas in cart: " + cart[2]);
-                                Console.WriteLine("|| ");
-                                Console.WriteLine("|| Total Cost: " + totalCost);
-                                Console.WriteLine("|| ");
-                                Console.WriteLine("|| 1. Continue to Checkout");
-                                Console.WriteLine("|| 2. Go back");
-                                Console.WriteLine("|| \n");
-
-
-                                try
-                                {
-                                    if (invalid)
-                                    {
-                                        Console.WriteLine(">Invalid Input.");
-                                    }
-                                    Console.Write(">");
-                                    coChoice = int.Parse(Console.ReadLine());
-                                }
-                                catch
-                                {
-                                    invalid = true;
-                                    continue;
-                                }
-
-                                if (coChoice < 1 || coChoice > 2)
-                                {
-                                    invalid = true;
-                                    continue;
-                                }
-
-                                switch (coChoice)
-                                {
-                                    case 1:
-                                        // print Thank you & Cart & total cost
-                                        Console.Clear();
-                                        Console.WriteLine("|| CHECKOUT SUCCESS");
-                                        Console.WriteLine("|| ---------------");
-                                        if (cart[0] != 0)
-                                            Console.WriteLine("|| Apples in cart: " + cart[0]);
-                                        if (cart[1] != 0)
-                                            Console.WriteLine("|| Mangoes in cart: " + cart[1]);
-                                        if (cart[2] != 0)
-                                            Console.WriteLine("|| Bananas in cart: " + cart[2]);
-                                        Console.WriteLine("|| ");
-                                        Console.WriteLine("|| Total Cost: " + totalCost);
-                                        Console.WriteLine("|| ");
-                                        Console.WriteLine("|| Thank you for your purchase!");
-                                        Console.WriteLine("|| ");
-                                        Console.WriteLine("\n\nPress any key to exit...");
-                                        Console.ReadLine();
-                                        exitCheckout = true;
-                                        loopMain = false;
-                                        break;
-                                    case 2: // go back
-                                        exitCheckout = true;
-                                        break;
-                                }
-                                if (exitCheckout) break;
-                            } while (true);
-                        }
+                        checkout();
                         break;
                     case 3: //Exit
-                        renderScreen("EXIT", new string[] { "Are you sure you want to exit?", "", "1. Yes", "2. No" });
                         if (getChoice("EXIT", new string[] { "Are you sure you want to exit?", "", "1. Yes", "2. No" }, 2) == 1)
                         {
                             loopMain = false;
@@ -157,15 +73,90 @@ namespace OrderingSystem3000
                         break;
                 }
             } while (loopMain);
-            
+        }
 
-            //Items To Show with costs
-            //Add or Remove
-            //Show Cart of only Items added to Cart, with cost
+        static void checkout()
+        {
+            if (cart[0] + cart[1] + cart[2] == 0)
+            {
+                printScreen("Oops!", new string[] { "Your cart is empty!" });
+                Console.WriteLine("Press any key to go back...");
+                Console.ReadLine();
+            }
+            else
+            {
+                bool invalidInput = false, exitCheckout = false;
+                do
+                {
+                    calculateTotalCost();
+                    Console.Clear();
+                    Console.WriteLine("|| CHECKOUT");
+                    Console.WriteLine("|| -----------");
+                    if (cart[0] != 0)
+                        Console.WriteLine("|| Apples in cart: " + cart[0]);
+                    if (cart[1] != 0)
+                        Console.WriteLine("|| Mangoes in cart: " + cart[1]);
+                    if (cart[2] != 0)
+                        Console.WriteLine("|| Bananas in cart: " + cart[2]);
+                    Console.WriteLine("|| ");
+                    Console.WriteLine("|| Total Cost: " + totalCost + "PHP");
+                    Console.WriteLine("|| ");
+                    Console.WriteLine("|| 1. Continue to Checkout");
+                    Console.WriteLine("|| 2. Go back");
+                    Console.WriteLine("|| \n");
 
-            //On checkout display all items and total cost
+                    int coChoice;
+                    try
+                    {
+                        if (invalidInput)
+                        {
+                            Console.WriteLine(">Invalid Input.");
+                        }
+                        Console.Write(">");
+                        coChoice = int.Parse(Console.ReadLine());
+                    }
+                    catch
+                    {
+                        invalidInput = true;
+                        continue;
+                    }
 
+                    if (coChoice < 1 || coChoice > 2)
+                    {
+                        invalidInput = true;
+                        continue;
+                    }
 
+                    switch (coChoice)
+                    {
+                        case 1:
+                            // print Thank you & Cart & total cost
+                            Console.Clear();
+                            Console.WriteLine("|| CHECKOUT SUCCESS");
+                            Console.WriteLine("|| ---------------");
+                            if (cart[0] != 0)
+                                Console.WriteLine("|| Apples in cart: " + cart[0]);
+                            if (cart[1] != 0)
+                                Console.WriteLine("|| Mangoes in cart: " + cart[1]);
+                            if (cart[2] != 0)
+                                Console.WriteLine("|| Bananas in cart: " + cart[2]);
+                            Console.WriteLine("|| ");
+                            Console.WriteLine("|| Total Cost: " + totalCost + " PHP");
+                            Console.WriteLine("|| ");
+                            Console.WriteLine("|| Thank you for your purchase!");
+                            Console.WriteLine("|| ");
+                            Console.WriteLine("\n\nPress any key to exit...");
+                            Console.ReadLine();
+                            exitCheckout = true;
+                            loopMain = false;
+                            break;
+                        case 2: // go back
+                            exitCheckout = true;
+                            break;
+                    }
+                    if (exitCheckout) break;
+                } while (true);
+            }
         }
 
         static void calculateTotalCost()
@@ -180,7 +171,7 @@ namespace OrderingSystem3000
 
         static void addRemovePrompt(int id, string name)
         {
-            renderScreen(name, addRemoveOptions);
+            printScreen(name, addRemoveOptions);
             switch (getChoice(name, addRemoveOptions, 3))
             {
                 case 1:
@@ -204,13 +195,13 @@ namespace OrderingSystem3000
                                                         "In Cart: " + cart[id]};
             if (stockAvailable[id] == 0)
             {
-                renderScreen("Sorry", new string[] { "Nothing in stock today!" });
+                printScreen("Sorry", new string[] { "Nothing in stock today!" });
                 Console.WriteLine("Press any key to go back...");
                 Console.ReadLine();
             }
             else
             {
-                renderScreen("Adding " + name, addMenu);
+                printScreen("Adding " + name, addMenu);
                 int addAmount = getChoice("Adding" + name,
                     addMenu,
                     stockAvailable[id]);
@@ -218,25 +209,24 @@ namespace OrderingSystem3000
                 cart[id] += addAmount;
                 stockAvailable[id] -= addAmount;
 
-                renderScreen("Success!", new string[] { "Added " + addAmount + " " + name + " to cart." });
+                printScreen("Success!", new string[] { "Added " + addAmount + " " + name + " to cart." });
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadLine();
             }
         }
 
-
-        //gets input, returns a choice
         static int getChoice(string title, string[] menu, int maxChoices)
         {
             int choice;
             bool invalid = false;
             do
             {
+                printScreen(title, menu);
                 try
                 {
                     if(invalid)
                     {
-                        renderScreen(title, menu);
+                        printScreen(title, menu);
                         Console.WriteLine(">Invalid Input.");
                     }
                     Console.Write(">");
@@ -256,7 +246,7 @@ namespace OrderingSystem3000
             } while (true);
         }
 
-        static void renderScreen(string title, string[] options)
+        static void printScreen(string title, string[] options)
         {
             Console.Clear();
             Console.WriteLine("|| " + title);
@@ -273,19 +263,19 @@ namespace OrderingSystem3000
             string[] deleteMenu = { "How many do you want to remove?", name + " in cart: " + cart[id] };
             if (cart[id] == 0)
             {
-                renderScreen("Oops", new string[] { "Nothing in your cart to delete!" });
+                printScreen("Oops", new string[] { "Nothing in your cart to delete!" });
                 Console.WriteLine("Press any key to go back...");
                 Console.ReadLine();
             }
             else
             {
-                renderScreen(name + " Removing", deleteMenu);
+                printScreen(name + " Removing", deleteMenu);
                 int deleteAmount = getChoice(name + " Removing", deleteMenu, cart[id]);
 
                 cart[id] -= deleteAmount;
                 stockAvailable[id] += deleteAmount;
 
-                renderScreen("Success!", new string[] { "Removed " + deleteAmount + " " + name + " from cart." });
+                printScreen("Success!", new string[] { "Removed " + deleteAmount + " " + name + " from cart." });
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadLine();
             }
