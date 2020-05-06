@@ -3,6 +3,7 @@
 // Description: Displays a list of items 
 // for the user to add to his cart and
 // calculates the total cost
+// Programmers: Emmanuel Valdueza, and Cyril Alonzo
 
 namespace OrderingSystem3000
 {
